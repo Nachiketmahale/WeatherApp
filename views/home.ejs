@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Weather forecast</title>
+      
+    <!-- jquery -->
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- spinnerlibrary -->
+	<link rel="stylesheet" href="/spinner.css">
+		
+    <!--Bootstrap CSS only -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">	
+
+    <!--fontawesome-->
+	<script src="https://kit.fontawesome.com/f0f14d8351.js" crossorigin="anonymous"></script>
+
+    <style>
+        *{
+            padding:0px;
+            margin:0px;
+            box-sizing: border-box;
+        }
+        body{
+            background: #FEC84D;
+            font-weight: bold;
+        }
+        #locationicon{
+            width:20px;
+            height:25px;
+            margin-bottom: 5px;
+        }
+        #heading{
+            text-align: center;
+            margin:1rem 0px;
+            margin-top: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        #inputwrapper{
+            position:relative;
+            border:1px solid gray;
+            border-radius: 5px ;
+            padding:10px;
+            max-width: 300px;
+            min-width: 255px;
+            width: 50%;
+            column-gap: 5px;
+        }
+        #search{
+            width: 20px;
+            height: 20px;
+            border:none;
+            background:transparent;
+        }
+        #place{
+            border:none;
+            flex: 1;
+            outline: none;
+            background: transparent;
+        }
+        #location{
+            margin-top:1rem;
+            font-size: 1rem;
+        }
+        #data-displayer{
+            margin-top:3rem;
+        }
+        #temperature{
+            max-width: 300px;
+        }
+        #icon>img{
+            width:45px;
+            height:45px;
+        }
+        .template,.forecast_template{
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            column-gap: 5px;
+            border-left: 1px solid #E42256;
+            border-bottom: 2px solid #E42256;
+            border-right:1px solid #E42256;
+            border-radius: 5px;
+            margin-top: 1rem;
+            padding:0px 10px;
+        }
+        .forecast_icon,.icn{
+            margin-bottom: .5rem;
+        }
+        .bore{
+            flex:1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hr{
+            flex-shrink: 1;
+        }
+        .content{
+            margin-left:10px;
+        }
+        .forecast_status{
+            word-wrap: break-word;
+        }
+        .forcast_description{
+            flex:1;
+            display: flex;
+            justify-content: center;
+            column-gap: 1rem;
+        }
+        .futurestatus{
+            width: 120px;
+            text-align: center;
+        }
+        .spinner{
+            margin:100px auto;
+        }
+        #data-card{
+            background: #FF8370;
+            overflow: hidden;
+            padding:0px 10px;
+        }
+        #technical-data-container .col{
+            padding: 10px 0px;
+            border:2px solid #FF8370;
+            margin-bottom: 0;
+            min-width: 130px;
+            background:#00B1B0;
+            
+        }
+        #sunrelateddata{
+            column-gap: 2px;
+            row-gap:2px
+        }
+        #sunrelateddata .col{
+            padding: 10px 0px;
+            margin-bottom: 0;
+            min-width: 130px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:#00B1B0;
+        }
+        @media only screen and (max-width: 360px){
+            #data-displayer{
+                padding:0px 5px;
+            }
+            body{
+                font-weight: normal;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="locationgetterwrapper" class="container">
+        <h3 id="heading">Get the weather details at doorstep!</h3>
+        <div id="locationgetter" class="d-flex justify-content-center align-items-center">
+            <span class="mx-2">
+                <svg  id="locationicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                    <path d="M384 192C384 279.4 267 435 215.7 499.2C203.4 514.5 180.6 514.5 168.3 499.2C116.1 435 0 279.4 0 192C0 85.96 85.96 0 192 0C298 0 384 85.96 384 192H384z"/>
+                </svg>
+            </span>
+            <div id="inputwrapper" class="d-flex justify-content-center gx-2">
+                <input type="text"  id="place" placeholder="Enter the location" />
+                <button type="button" id="search" onclick="getdata()"> 
+                    <svg id="searchicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <div id="loader"></div>
+        <div id="data-displayer" class="container-md">
+            <div id="data-card">
+                <div id="technical-data-container" class="row text-center">
+                    <p id="wind" class="col">
+                        wind:
+                        <span></span>
+                    </p>
+                    <p id="humidity" class="col">
+                        humidity:
+                        <span></span>
+                    </p>
+                    <p id="visibility" class="col">
+                        visibility:
+                        <span></span>
+                    </p>
+                    <p id="UV-index" class="col">
+                        UV-index:
+                        <span></span>
+                    </p>
+                </div>
+                <div id="main-data" >
+                    <div id="location-data" class="">
+                        <p id="location" class="text-center">
+                        </p>
+                        <div id="coordinates" class="container text-center">
+                            <div class="row">
+                                <p id="latitude" class="col">
+                                    latitude
+                                    <span></span>
+                                </p>
+                                <p id="longitude" class="col">
+                                    longitude
+                                    <span></span>
+                                </p>
+                            </div>
+                            <div class="row">
+                                <p id="date" class="col"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="extra-data">
+                        <div class="container">
+                            <div id="temperature" class="row text-center mx-auto">
+                                    <span id="icon" class="col">
+                                    </span>
+                                    <!-- <span id="current-temperature" class="col"></span>
+                                    <span id="" class="col"></span> -->
+                            </div>
+                            <div id="maxmintemp" class="row text-center">
+                                <p id="low" class="col">
+                                    Low
+                                    <span></span>
+                                </p>
+                                <p id="feelslike" class="col">
+                                    Feels like
+                                    <span></span>
+                                </p>
+                                <p id="high" class="col">
+                                    High
+                                    <span></span>
+                                </p>
+                            </div>
+                        </div>
+                        <div id="sunrelateddata" class="row text-center">
+                            <p id="sunrise" class="col">
+                                <img src="./images/sunrise.png" alt="sunrise">
+                                <span></span>
+                            </p>
+                            <p id="dewpoint" class="col">
+                                Dew point:
+                                <span></span>
+                            </p>
+                            <p id="pressure" class="col">
+                                Pressure:
+                                <span></span>
+                            </p>
+                            <p id="sunset" class="col">
+                                <img src="./images/sunset.png" alt="sunset" style="width:64px;height:64px">
+                                <span></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="forcast-data">
+                <div class="container-md">
+                    <div class="row">
+                        <div id="hourlydata" class="col-sm-5 col-md-5">
+                        </div>
+                        <div id="forcastdata" class="col-sm-7 col-md-7">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/weather.js"></script>
+</body>
+</html>
