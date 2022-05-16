@@ -118,9 +118,9 @@ function getdata() {
     $('#forcastdata').html('');
     const location = $('#place').val();
     const baseURL="https://api.openweathermap.org/data/2.5/onecall?"
-    const key = "b116413767d2d2024cd0e18fac37c1eb";
+    // const key = "b116413767d2d2024cd0e18fac37c1eb";
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}
-    &appid=${key}`)
+    &appid=${cred.KEY}`)
     .then(response=>response.json())
     .then((data)=>{
         console.log(data);
@@ -134,7 +134,7 @@ function getdata() {
         console.log(longitude);
         $('#loader').toggleClass('spinner');
         $('#data-displayer').addClass('show');
-        const query=baseURL+"lat="+latitude+"&lon="+longitude+"&appid="+key;
+        const query=baseURL+"lat="+latitude+"&lon="+longitude+"&appid="+cred.KEY;
         fetch(query)
         .then(response=>response.json())
         .then((data)=>{
@@ -148,3 +148,4 @@ function getdata() {
     })
     $('#loader').toggleClass('spinner');
 }
+
